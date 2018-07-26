@@ -1,0 +1,23 @@
+public NdefMessage createTextMessage(String content) {
+ try {
+    byte[] lang = Locale.getDefault().getLanguage().getBytes("**************************");
+    byte[] text = content.getBytes("************************"); 
+
+    int langSize = lang.length;
+    int textLength = text.length;
+
+    ByteArrayOutputStream payload = new ByteArrayOutputStream(1 + langSize + textLength);
+    payload.write((byte) (langSize & 0x1F));
+    payload.write(lang, 0, langSize);
+    payload.write(text, 0, textLength);
+    NdefRecord record = new NdefRecord(NdefRecord.TNF_WELL_KNOWN,
+    NdefRecord.RTD_TEXT, new byte[0],
+    payload.toByteArray());
+    return new NdefMessage(new NdefRecord[]{record});
+  }
+  catch (Exception e) {
+    e.printStackTrace();
+  }
+
+  return null;
+}
